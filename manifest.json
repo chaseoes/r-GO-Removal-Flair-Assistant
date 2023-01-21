@@ -65,6 +65,6 @@
     
     "web_accessible_resources": [{
         "resources": ["style_nightmode_overrides.css"],
-        "matches": ["*://reddit.com/*"]
+        "matches": ["<all_urls>"]
     }]
 }
