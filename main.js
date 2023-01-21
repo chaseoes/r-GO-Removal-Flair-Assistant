@@ -1,5 +1,6 @@
 // Necessary to perform any API actions
 var modhash = $("form.logout input[name=uh]").val();
+var currentSubredditName = location.href.split('/')[4];
 
 function checkNightMode() {
     function doModeLogic() {
@@ -52,65 +53,45 @@ function addQuickFlair() {
         var flairChoices = document.createElement('DIV');
         flairChoices.className = 'drop-choices';
 
-        var linkFlairs = {
-            'AMA': 'ama',
-            'Discussion': 'discussion',
-            'Discussion | Esports': 'discussion esports',
-            'Feedback': 'feedback',
-            'Fluff': 'fluff',
-            'Fluff | Esports': 'fluff esports',
-            'Game Update': 'update',
-            'Gameplay': 'gameplay',
-            'Gameplay | Esports': 'gameplay esports',
-            'Help': 'help',
-            'News/Events': 'news',
-            'News/Events | Esports': 'news esports',
-            'Scheduled Sticky': 'sticky',
-            'Tips/Guides': 'guides',
-            'UGC': 'ugc',
-            'Workshop Skin': 'workshop skin'
-        };
-
-        for (var lf in linkFlairs) {
-            var linkFlair = document.createElement('A');
-            $(linkFlair).text(lf);
-
-            if (lf === 'UGC') {
-                linkFlair.title = 'User Generated Content';
-            } else {
-                linkFlair.title = lf;
+        // Fetch list of flair names and template ID's for the current subreddit
+        linkFlairs = {}
+        fetch('https://www.reddit.com/r/' + currentSubredditName + '/api/link_flair_v2.json').then(response => response.json()).then(data => {
+            let flairs = data;
+            for (let i = 0; i < flairs.length; i++) {
+                linkFlairs[flairs[i].text.replace('&amp;', '&')] = flairs[i].id;
             }
-            linkFlair.className = 'choice';
 
-            $(linkFlair).click(function (ev) {
-                ev.preventDefault();
-                var flairText = ev.target.innerHTML;
-                var flairClicked = linkFlairs[flairText];
+            // Build dropdown list of flairs
+            for (let lf in linkFlairs) {
+                var linkFlair = document.createElement('A');
+                $(linkFlair).text(lf);
+                linkFlair.title = lf;
+                linkFlair.className = 'choice';
 
-                if (flairText.includes('/')) {
-                    flairText = flairText.replace('/', ' & ');
-                }
-                var id = $(ev.target).closest('.thing').attr('data-fullname');
+                $(linkFlair).click(function (ev) {
+                    ev.preventDefault();
+                    var flairText = ev.target.innerHTML;
+                    var flairClicked = linkFlairs[lf]
+                    var id = $(ev.target).closest('.thing').attr('data-fullname');
 
-                if (flairText === 'UGC') {
-                    flairText = 'User Generated Content';
-                }
-                chrome.runtime.sendMessage({
-                    contentScriptQuery: 'editFlair', 
-                    thing: id,
-                    flairCSS: flairClicked,
-                    text: flairText,
-                    mod: modhash
+                    chrome.runtime.sendMessage({
+                        contentScriptQuery: 'editFlair', 
+                        thing: id,
+                        flairTemplateID: flairClicked,
+                        text: flairText,
+                        mod: modhash,
+                        subreddit: currentSubredditName
+                    });
+
+                    var dd = $(ev.target.parentNode).siblings('.rgo-qf-dropdown');
+                    dd.html('flaired!');
+                    dd.removeClass('rgo-qf-dropdown');
                 });
-                //editFlair(id, flairClicked, flairText);
-                
-                var dd = $(ev.target.parentNode).siblings('.rgo-qf-dropdown');
-                dd.html('flaired!');
-                dd.removeClass('rgo-qf-dropdown');
-            });
 
-            flairChoices.appendChild(linkFlair);
-        }
+                flairChoices.appendChild(linkFlair);
+            }
+
+    });
 
         var li = document.createElement('LI');
         var spacer = document.createElement('DIV');
