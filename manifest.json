@@ -60,14 +60,7 @@
 
     "permissions": [
         "activeTab",
-        "storage",
-        "*://*.reddit.com/r/GlobalOffensive",
-        "*://*.reddit.com/r/GlobalOffensive/*",
-        "*://*.reddit.com/r/globaloffensive",
-        "*://*.reddit.com/r/globaloffensive/*",
-        "*://*.reddit.com/r/GlobalOffensiveTest",
-        "*://*.reddit.com/r/GlobalOffensiveTest/*",
-        "*://*.reddit.com/r/mod/*"
+        "storage"
     ],
     
     "web_accessible_resources": [{
