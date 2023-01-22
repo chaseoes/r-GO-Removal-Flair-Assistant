@@ -1,35 +1,35 @@
 // Necessary to perform any API actions
 var modhash = $("form.logout input[name=uh]").val();
 
-function checkNightMode() {
-    function doModeLogic() {
-        if($('body').hasClass('res-nightmode')) {
-            // Stop if we've already added the stylesheet
-            if($('link#rgo_nightmode').length) { return; }
-
-            $('<link/>', {
-                rel: 'stylesheet',
-                type: 'text/css',
-                href: chrome.runtime.getURL('style_nightmode_overrides.css'),
-                id: 'rgo_nightmode'
-            }).appendTo('head');
-        } else {
-            $('link#rgo_nightmode').remove();
-        }
-    }
-
-    // hook changes to body's classes to handle night mode changes
-    var observer = new MutationObserver(function(mutations) {
-        doModeLogic();
-    });
-    observer.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class']
-    });
-
-    // invoke nightmode logic once to process current state
-    doModeLogic();
-}
+//function checkNightMode() {
+//    function doModeLogic() {
+//        if($('body').hasClass('res-nightmode')) {
+//            // Stop if we've already added the stylesheet
+//            if($('link#rgo_nightmode').length) { return; }
+//
+//            $('<link/>', {
+//                rel: 'stylesheet',
+//                type: 'text/css',
+//                href: chrome.runtime.getURL('style_nightmode_overrides.css'),
+//                id: 'rgo_nightmode'
+//            }).appendTo('head');
+//        } else {
+//            $('link#rgo_nightmode').remove();
+//        }
+//    }
+//
+//    // hook changes to body's classes to handle night mode changes
+//    var observer = new MutationObserver(function(mutations) {
+//        doModeLogic();
+//    });
+//    observer.observe(document.body, {
+//        attributes: true,
+//        attributeFilter: ['class']
+//    });
+//
+//    // invoke nightmode logic once to process current state
+//    doModeLogic();
+//}
 
 function addQuickFlair() {
     // Add our special button to all flatlists under threads
@@ -339,7 +339,7 @@ $(window).on('neverEndingLoad', function () {
     addRemoveWithReasons();
 });
 $(document).ready(function () {
-    checkNightMode();
+    //checkNightMode();
     addQuickFlair();
     addRemoveWithReasons();
 });
