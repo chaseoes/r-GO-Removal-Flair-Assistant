@@ -1,36 +1,6 @@
 // Necessary to perform any API actions
 var modhash = $("form.logout input[name=uh]").val();
 
-//function checkNightMode() {
-//    function doModeLogic() {
-//        if($('body').hasClass('res-nightmode')) {
-//            // Stop if we've already added the stylesheet
-//            if($('link#rgo_nightmode').length) { return; }
-//
-//            $('<link/>', {
-//                rel: 'stylesheet',
-//                type: 'text/css',
-//                href: chrome.runtime.getURL('style_nightmode_overrides.css'),
-//                id: 'rgo_nightmode'
-//            }).appendTo('head');
-//        } else {
-//            $('link#rgo_nightmode').remove();
-//        }
-//    }
-//
-//    // hook changes to body's classes to handle night mode changes
-//    var observer = new MutationObserver(function(mutations) {
-//        doModeLogic();
-//    });
-//    observer.observe(document.body, {
-//        attributes: true,
-//        attributeFilter: ['class']
-//    });
-//
-//    // invoke nightmode logic once to process current state
-//    doModeLogic();
-//}
-
 function addQuickFlair() {
     // Add our special button to all flatlists under threads
     $('.link .flat-list.buttons').each(function (i, e) {
@@ -40,7 +10,6 @@ function addQuickFlair() {
         // Create selected option/trigger div
         var quickFlair = document.createElement('DIV');
         var currentSubredditName = e.getElementsByClassName("bylink comments")[0].getAttribute("href").split('/')[4]
-
         quickFlair.className = 'dropdown lightdrop rgo-qf-dropdown';
 
         var qfDrop = document.createElement('SPAN');
@@ -106,7 +75,7 @@ function addQuickFlair() {
 
 function addRemoveWithReasons() {
     var diaDiv  = document.createElement('DIV'),
-        txtArea = document.createElement('TEXTAREA');
+    txtArea = document.createElement('TEXTAREA');
 
     diaDiv.id  = 'ruleDialog';
     txtArea.id = 'ruleText';
@@ -121,7 +90,7 @@ function addRemoveWithReasons() {
         $('.link .flat-list.buttons').each(function(i, e) {
             // Skip elements we've already added the dropdown to
             if ($(e).has('.rgo-dropdown').length) { return; }
-
+            
             var currentSubredditName = e.getElementsByClassName("bylink comments")[0].getAttribute("href").split('/')[4]
 
             // Fetch subreddit rules
@@ -134,7 +103,6 @@ function addRemoveWithReasons() {
 
             // Create selected option/trigger div
             var selected = document.createElement('DIV');
-
             selected.className = 'dropdown lightdrop rgo-dropdown';
 
             var selectedSpan = document.createElement('SPAN');
@@ -173,7 +141,7 @@ function addRemoveWithReasons() {
                                             var removedThreadLink = 'https://redd.it/' + id.replace('t3_', '');
                                             var removalMessage = $('#ruleText').val();
                                             var footer = "";
-
+                                            
                                             if (storage.footer != '') {
                                                 footer = "\n\n---\n\n" + storage.footer.replace('%%thread_link%%', removedThreadLink);
                                                 removalMessage += footer;
@@ -223,7 +191,6 @@ function addRemoveWithReasons() {
                         chrome.storage.sync.get(chromeGet, function(storage) {
                             // If they want one click removals, don't show dialog
                             if (storage.oneTaps) {
-                                // var property = $(ev.target).text().toLowerCase().replace(' ', '');
                                 var property = ev.target.innerHTML.replace(' ','').toLowerCase().split(':')[0]
 
                                 if (!chromeGet.hasOwnProperty(property)) {
@@ -290,13 +257,12 @@ function addRemoveWithReasons() {
                                                 mod: modhash,
                                                 subreddit: currentSubredditName
                                             });
-                                            //$( this ).dialog('close');
-                                            //removeWithReason(id, removalMessage, distinguish = true, win = this);
 
                                             var dd = $(ev.target.parentNode).siblings('.rgo-dropdown');
                                             dd.html("removed");
                                             dd.removeClass('rgo-dropdown');
                                         },
+
                                         "Abort!" : function() {
                                             $( this ).dialog( "close" );
                                         }
