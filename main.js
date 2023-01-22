@@ -1,6 +1,5 @@
 // Necessary to perform any API actions
 var modhash = $("form.logout input[name=uh]").val();
-var currentSubredditName = location.href.split('/')[4];
 
 function checkNightMode() {
     function doModeLogic() {
@@ -40,6 +39,7 @@ function addQuickFlair() {
 
         // Create selected option/trigger div
         var quickFlair = document.createElement('DIV');
+        var currentSubredditName = e.getElementsByClassName("bylink comments")[0].getAttribute("href").split('/')[4]
 
         quickFlair.className = 'dropdown lightdrop rgo-qf-dropdown';
 
@@ -117,18 +117,20 @@ function addRemoveWithReasons() {
 
     $('#siteTable').append( diaDiv );
 
-    // Fetch subreddit rules
-    fetch('https://www.reddit.com/r/' + currentSubredditName + '/about/rules.json').then(response => response.json()).then(data => {
-        var rules = {}
-        for (let i = 0; i < data.rules.length; i++) {
-            ruleName = data.rules[i].short_name
-            rules["Rule " + (i + 1) + ": " + ruleName] = ruleName
-        }
-
         // Add our special button to all flatlists under threads
         $('.link .flat-list.buttons').each(function(i, e) {
             // Skip elements we've already added the dropdown to
             if ($(e).has('.rgo-dropdown').length) { return; }
+
+            var currentSubredditName = e.getElementsByClassName("bylink comments")[0].getAttribute("href").split('/')[4]
+
+            // Fetch subreddit rules
+            fetch('https://www.reddit.com/r/' + currentSubredditName + '/about/rules.json').then(response => response.json()).then(data => {
+            var rules = {}
+            for (let i = 0; i < data.rules.length; i++) {
+                ruleName = data.rules[i].short_name
+                rules["Rule " + (i + 1) + ": " + ruleName] = ruleName
+            }
 
             // Create selected option/trigger div
             var selected = document.createElement('DIV');
