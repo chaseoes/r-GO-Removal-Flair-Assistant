@@ -32,10 +32,12 @@ chrome.runtime.onMessage.addListener(
 
             return true;
         }
+
         else if (request.contentScriptQuery === 'removeWithReason') {
-            const removeUrl = new URL('https://www.reddit.com/r/globaloffensive/api/remove');
-            const commentUrl = new URL('https://www.reddit.com/r/globaloffensive/api/comment');
-            const distinguishUrl = new URL('https://www.reddit.com/r/globaloffensive/api/distinguish/yes');
+            const currentSubredditName = request.subreddit
+            const removeUrl = new URL('https://www.reddit.com/r/' + currentSubredditName + '/api/remove');
+            const commentUrl = new URL('https://www.reddit.com/r/' + currentSubredditName + '/api/comment');
+            const distinguishUrl = new URL('https://www.reddit.com/r/' + currentSubredditName + '/api/distinguish/yes');
             removeUrl.search = new URLSearchParams({
                 api_type: 'json',
                 uh: request.mod,
